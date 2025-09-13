@@ -1,0 +1,301 @@
+[
+  {
+    "id": "TC001",
+    "title": "Real-time AI bot detection accuracy",
+    "description": "Verify that the system detects and classifies AI bots visiting the website with accuracy above 95%, and confidence scores are correctly assigned.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate visits from known AI bot platforms and normal users on the website using the tracking API."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the AI bot detection algorithm classifies visits correctly with accuracy > 95%."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify confidence scores are generated and fall within expected ranges."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Real-time Dashboard live updates latency",
+    "description": "Ensure the live AI bot activity feed updates within 2 seconds of data arrival for real-time monitoring.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Generate AI bot activity events and post them through the tracking API."
+      },
+      {
+        "type": "action",
+        "description": "Observe the real-time dashboard's live feed for update propagation."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm that live feed updates within 2 seconds of event generation."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "API response times under normal load",
+    "description": "Test that all analytics and tracking API endpoints respond within 200ms under typical load conditions.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Send multiple concurrent valid requests to tracking and analytics API endpoints."
+      },
+      {
+        "type": "assertion",
+        "description": "Measure and verify all API response times are less than 200ms."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Dashboard chart data accuracy",
+    "description": "Verify that all visual charts (Brand Visibility, Share of Voice, Visits, Top Bots, Hourly Trends) correctly reflect the aggregated AI bot visit data.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Seed database with known AI bot visit data with controlled timestamps and platform identifiers."
+      },
+      {
+        "type": "action",
+        "description": "Access the analytics dashboard and navigate through each chart tab."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm each chart accurately represents the seeded data values and trends."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Content Optimization recommendations validity",
+    "description": "Validate that AI-powered content optimization suggestions are generated based on up-to-date data trends and user feedback.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Input current trend data and simulate user feedback into the content optimization module."
+      },
+      {
+        "type": "assertion",
+        "description": "Ensure generated optimization recommendations are relevant, actionable, and consistent with input data."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Tracking script and pixel data collection",
+    "description": "Verify that the JS tracking script and pixel correctly collect visit data and synchronize it with the Supabase backend.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Integrate the provided JS tracking script and pixel into a test website."
+      },
+      {
+        "type": "action",
+        "description": "Simulate AI bot and user visits to the test website."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify that visits are recorded correctly within the Supabase database in real-time."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "User Interface responsiveness and consistency",
+    "description": "Verify UI components render correctly and consistently across supported browsers and device sizes, including responsiveness of the Glass Morphism theme.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the platform on multiple browsers (Chrome, Firefox, Safari, Edge) and various devices (desktop, tablet, mobile)."
+      },
+      {
+        "type": "assertion",
+        "description": "Check UI element alignment, readability, and responsiveness to window resizing."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm Glass Morphism styling is consistently applied across components."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Security and roles-based access control enforcement",
+    "description": "Check that user data privacy is maintained and that access controls based on subscription tiers and user roles are enforced correctly.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to access restricted APIs and UI components with users assigned different roles and subscription tiers."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify unauthorized access is denied and proper error messages or redirects are presented."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm users can only access features allowed by their subscription limits."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Subscription tier limits enforcement",
+    "description": "Ensure the system correctly limits visits, data retention, and API access based on the user's subscription tier.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate user subscription tiers with varying limits on visits and API throughput."
+      },
+      {
+        "type": "action",
+        "description": "Generate traffic exceeding those limits or access features beyond tier permissions."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the system enforces limits with appropriate warnings or errors."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Customizable time range filter functionality",
+    "description": "Verify that the time range filter allows users to select different date ranges and that analytics data refreshes accordingly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Select various predefined and custom date ranges in the time range filter component."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm all charts and metrics update to reflect data strictly within the selected ranges."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Competitive Intelligence benchmarking accuracy",
+    "description": "Validate that competitor share-of-voice charts and SWOT benchmarking display accurate analytics based on current data.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Seed competitor and brand data into the system."
+      },
+      {
+        "type": "action",
+        "description": "Open Competitive Intelligence tab and review share-of-voice and SWOT charts."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm displayed data matches seeded input and calculations are correct."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Query Discovery trending topics identification",
+    "description": "Check that the Query Discovery feature accurately identifies trending topics and content gaps based on AI platform data.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Inject sample query data with temporal and platform metadata representing trending topics."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify Query Discovery tab lists trending topics and accurately highlights content gaps."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Real-Time Monitoring alerts and live feed",
+    "description": "Ensure that live AI bot activity alerts are triggered promptly and the real-time feed updates with new events.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Simulate bot activity events with alert conditions (e.g. spike in visits)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify alert notifications appear in the real-time monitoring interface immediately."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm the live feed updates dynamically with the incoming events."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Comprehensive logging and error handling validation",
+    "description": "Verify system logs important events and errors, providing useful information for troubleshooting and monitoring.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Trigger known errors or edge cases in API requests and UI interactions."
+      },
+      {
+        "type": "assertion",
+        "description": "Check system logs record detailed error information appropriately."
+      },
+      {
+        "type": "assertion",
+        "description": "Confirm error messages are informative and user-friendly."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Scalability under high load",
+    "description": "Test platform backend scalability by simulating high volumes of AI bot visits and analytics queries concurrently.",
+    "category": "performance",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Use load testing tools to generate simultaneous high-volume tracking API requests."
+      },
+      {
+        "type": "action",
+        "description": "Run concurrent queries on analytics endpoints during load."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify system stability, response times within SLA, and no data loss or corruption."
+      }
+    ]
+  }
+]

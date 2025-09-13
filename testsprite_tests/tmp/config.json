@@ -1,0 +1,16 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000",
+  "executionArgs": {
+    "projectName": "WhoCrawledMe",
+    "projectPath": "/Users/shubhamshinde/Desktop/Projects/WhoCrawledMe",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-kRcheH8NPaE18UQxSbhD3CI2UEwTS6RBR3BsaUpSgUpbvRB_9d_xmf-PBP2JrlGEyC1MbADDonYUAzQDP2m-ZF6ZmvWFRCYuYcPvsIWHxyENWqGkwHtjijeDNlJZg0aPYFE"
+    }
+  },
+  "proxy": "http://223eccd4-c2a3-4446-b4e6-beadb194fdf9:AtAkXBcT4g3mTw2qRn5w5x5u6ipnJgED@tun.testsprite.com:8080"
+}

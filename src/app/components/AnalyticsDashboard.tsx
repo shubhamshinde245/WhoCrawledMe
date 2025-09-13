@@ -1,54 +1,78 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/cards';
-import { Badge } from '@/components/ui/badge';
-import { TrendingUp, Eye, Target, Brain, BarChart3, Globe, Zap, Users } from 'lucide-react';
-import MetricsCards from './MetricsCards';
-import BrandVisibilityChart from './BrandVisibilityChart';
-import ShareOfVoiceChart from './ShareOfVoiceChart';
-import CompetitiveIntelligence from './CompetitiveIntelligence';
-import AIPlatformMonitoring from './AIPlatformMonitoring';
-import QueryDiscovery from './QueryDiscovery';
-import BrandAnalytics from './BrandAnalytics';
-import ContentOptimization from './ContentOptimization';
-import RealTimeMonitoring from './RealTimeMonitoring';
-import TimeRangeFilter from './TimeRangeFilter';
+import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/cards";
+import { Badge } from "@/components/ui/badge";
+import {
+  TrendingUp,
+  Eye,
+  Target,
+  Brain,
+  BarChart3,
+  Globe,
+  Zap,
+  Users,
+} from "lucide-react";
+import MetricsCards from "./MetricsCards";
+import BrandVisibilityChart from "./BrandVisibilityChart";
+import ShareOfVoiceChart from "./ShareOfVoiceChart";
+import CompetitiveIntelligence from "./CompetitiveIntelligence";
+import AIPlatformMonitoring from "./AIPlatformMonitoring";
+import QueryDiscovery from "./QueryDiscovery";
+import BrandAnalytics from "./BrandAnalytics";
+import ContentOptimization from "./ContentOptimization";
+import RealTimeMonitoring from "./RealTimeMonitoring";
+import TimeRangeFilter from "./TimeRangeFilter";
 
 export default function AnalyticsDashboard() {
-  const [timeRange, setTimeRange] = useState('7d');
-  const [activeTab, setActiveTab] = useState('overview');
+  const [timeRange, setTimeRange] = useState("7d");
+  const [activeTab, setActiveTab] = useState("overview");
   // const [loading, setLoading] = useState(false);
   // const [overviewData, setOverviewData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      // setLoading(true);
       try {
         // Fetch overview data
-        const overviewResponse = await fetch(`/api/analytics?timeRange=${timeRange}&type=overview`);
+        const overviewResponse = await fetch(
+          `/api/analytics?timeRange=${timeRange}&type=overview`
+        );
         const overviewData = await overviewResponse.json();
-        // setOverviewData(overviewData);
 
         // Fetch visits over time
-        const visitsResponse = await fetch(`/api/analytics?timeRange=${timeRange}&type=visits-over-time`);
+        const visitsResponse = await fetch(
+          `/api/analytics?timeRange=${timeRange}&type=visits-over-time`
+        );
         const visitsData = await visitsResponse.json();
-        
+
         // Fetch top bots
-        const botsResponse = await fetch(`/api/analytics?timeRange=${timeRange}&type=top-bots`);
+        const botsResponse = await fetch(
+          `/api/analytics?timeRange=${timeRange}&type=top-bots`
+        );
         const botsData = await botsResponse.json();
-        
+
         // Fetch hourly trends
-        const trendsResponse = await fetch(`/api/analytics?timeRange=${timeRange}&type=hourly-trends`);
+        const trendsResponse = await fetch(
+          `/api/analytics?timeRange=${timeRange}&type=hourly-trends`
+        );
         const trendsData = await trendsResponse.json();
-        
-        // Update chart data with real API responses
-        console.log('Analytics data loaded:', { overviewData, visitsData, botsData, trendsData });
+
+        // Log analytics data for debugging
+        console.log("Analytics data loaded:", {
+          overviewData,
+          visitsData,
+          botsData,
+          trendsData,
+        });
       } catch (error) {
-        console.error('Failed to fetch analytics data:', error);
-      } finally {
-        // setLoading(false);
+        console.error("Failed to fetch analytics data:", error);
       }
     };
 
@@ -65,8 +89,8 @@ export default function AnalyticsDashboard() {
               AI Platform Intelligence
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl">
-              Comprehensive monitoring and analytics for your brands
-              presence across 25+ AI platforms
+              Comprehensive monitoring and analytics for your brands presence
+              across 25+ AI platforms
             </p>
             <div className="flex flex-wrap gap-2 mt-4">
               <Badge

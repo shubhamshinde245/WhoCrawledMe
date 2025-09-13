@@ -1,9 +1,23 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/cards';
-import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { TrendingUp, Eye } from 'lucide-react';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/cards";
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Area,
+  AreaChart,
+} from "recharts";
+import { TrendingUp, Eye } from "lucide-react";
 
 interface BrandVisibilityChartProps {
   timeRange: string;
@@ -17,29 +31,35 @@ interface VisibilityData {
   engagement: number;
 }
 
-export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChartProps) {
+export default function BrandVisibilityChart({
+  timeRange,
+}: BrandVisibilityChartProps) {
   const [data, setData] = useState<VisibilityData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMetric, setSelectedMetric] = useState<'mentions' | 'visibility_score' | 'reach'>('mentions');
+  const [selectedMetric, setSelectedMetric] = useState<
+    "mentions" | "visibility_score" | "reach"
+  >("mentions");
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Mock data for now - replace with actual API call
-        const mockData: VisibilityData[] = [
-          { date: '2024-01-01', mentions: 45, visibility_score: 78, reach: 12500, engagement: 8.5 },
-          { date: '2024-01-02', mentions: 52, visibility_score: 82, reach: 14200, engagement: 9.2 },
-          { date: '2024-01-03', mentions: 38, visibility_score: 75, reach: 11800, engagement: 7.8 },
-          { date: '2024-01-04', mentions: 67, visibility_score: 88, reach: 16900, engagement: 11.3 },
-          { date: '2024-01-05', mentions: 59, visibility_score: 85, reach: 15600, engagement: 10.1 },
-          { date: '2024-01-06', mentions: 71, visibility_score: 91, reach: 18200, engagement: 12.7 },
-          { date: '2024-01-07', mentions: 63, visibility_score: 87, reach: 16800, engagement: 11.5 },
-        ];
-        
-        setData(mockData);
+        // Fetch real brand visibility data from API
+        const response = await fetch(
+          `/api/brand-analytics?timeRange=${timeRange}&type=visibility`
+        );
+        const result = await response.json();
+
+        if (result.error) {
+          console.error("Brand visibility API error:", result.error);
+          setData([]);
+          return;
+        }
+
+        setData(result.data || []);
       } catch (error) {
-        console.error('Error fetching brand visibility data:', error);
+        console.error("Error fetching brand visibility data:", error);
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -50,32 +70,45 @@ export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChart
 
   const getMetricColor = (metric: string) => {
     switch (metric) {
-      case 'mentions': return '#3b82f6';
-      case 'visibility_score': return '#10b981';
-      case 'reach': return '#8b5cf6';
-      default: return '#3b82f6';
+      case "mentions":
+        return "#3b82f6";
+      case "visibility_score":
+        return "#10b981";
+      case "reach":
+        return "#8b5cf6";
+      default:
+        return "#3b82f6";
     }
   };
 
   const getMetricLabel = (metric: string) => {
     switch (metric) {
-      case 'mentions': return 'Brand Mentions';
-      case 'visibility_score': return 'Visibility Score';
-      case 'reach': return 'Estimated Reach';
-      default: return 'Brand Mentions';
+      case "mentions":
+        return "Brand Mentions";
+      case "visibility_score":
+        return "Visibility Score";
+      case "reach":
+        return "Estimated Reach";
+      default:
+        return "Brand Mentions";
     }
   };
 
   const formatValue = (value: number, metric: string) => {
-    if (metric === 'reach') {
+    if (metric === "reach") {
       return value >= 1000 ? `${(value / 1000).toFixed(1)}K` : value.toString();
     }
     return value.toString();
   };
 
-  const currentValue = data.length > 0 ? data[data.length - 1][selectedMetric] : 0;
-  const previousValue = data.length > 1 ? data[data.length - 2][selectedMetric] : 0;
-  const changePercent = previousValue > 0 ? ((currentValue - previousValue) / previousValue * 100) : 0;
+  const currentValue =
+    data.length > 0 ? data[data.length - 1][selectedMetric] : 0;
+  const previousValue =
+    data.length > 1 ? data[data.length - 2][selectedMetric] : 0;
+  const changePercent =
+    previousValue > 0
+      ? ((currentValue - previousValue) / previousValue) * 100
+      : 0;
 
   if (loading) {
     return (
@@ -105,22 +138,24 @@ export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChart
         <CardDescription>
           Track your brands visibility across AI platforms over time
         </CardDescription>
-        
+
         {/* Metric Selector */}
         <div className="flex gap-2 mt-4">
-          {(['mentions', 'visibility_score', 'reach'] as const).map((metric) => (
-            <button
-              key={metric}
-              onClick={() => setSelectedMetric(metric)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
-                selectedMetric === metric
-                  ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {getMetricLabel(metric)}
-            </button>
-          ))}
+          {(["mentions", "visibility_score", "reach"] as const).map(
+            (metric) => (
+              <button
+                key={metric}
+                onClick={() => setSelectedMetric(metric)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+                  selectedMetric === metric
+                    ? "bg-blue-100 text-blue-700 border border-blue-200"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {getMetricLabel(metric)}
+              </button>
+            )
+          )}
         </div>
       </CardHeader>
       <CardContent>
@@ -130,12 +165,14 @@ export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChart
             <div className="text-3xl font-bold text-gray-900">
               {formatValue(currentValue, selectedMetric)}
             </div>
-            <div className={`flex items-center gap-1 text-sm font-medium ${
-              changePercent >= 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              <TrendingUp className={`w-4 h-4 ${
-                changePercent < 0 ? 'rotate-180' : ''
-              }`} />
+            <div
+              className={`flex items-center gap-1 text-sm font-medium ${
+                changePercent >= 0 ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              <TrendingUp
+                className={`w-4 h-4 ${changePercent < 0 ? "rotate-180" : ""}`}
+              />
               {Math.abs(changePercent).toFixed(1)}%
             </div>
           </div>
@@ -149,37 +186,61 @@ export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChart
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
               <defs>
-                <linearGradient id={`gradient-${selectedMetric}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={getMetricColor(selectedMetric)} stopOpacity={0.3} />
-                  <stop offset="95%" stopColor={getMetricColor(selectedMetric)} stopOpacity={0} />
+                <linearGradient
+                  id={`gradient-${selectedMetric}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor={getMetricColor(selectedMetric)}
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={getMetricColor(selectedMetric)}
+                    stopOpacity={0}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis 
-                dataKey="date" 
+              <XAxis
+                dataKey="date"
                 stroke="#64748b"
                 fontSize={12}
-                tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                tickFormatter={(value) =>
+                  new Date(value).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })
+                }
               />
-              <YAxis 
+              <YAxis
                 stroke="#64748b"
                 fontSize={12}
                 tickFormatter={(value) => formatValue(value, selectedMetric)}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "8px",
+                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                 }}
-                labelFormatter={(value) => new Date(value).toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-                formatter={(value: number) => [formatValue(value, selectedMetric), getMetricLabel(selectedMetric)]}
+                labelFormatter={(value) =>
+                  new Date(value).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                }
+                formatter={(value: number) => [
+                  formatValue(value, selectedMetric),
+                  getMetricLabel(selectedMetric),
+                ]}
               />
               <Area
                 type="monotone"
@@ -202,13 +263,23 @@ export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChart
           </div>
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900">
-              {data.length > 0 ? Math.round(data.reduce((sum, item) => sum + item.visibility_score, 0) / data.length) : 0}
+              {data.length > 0
+                ? Math.round(
+                    data.reduce((sum, item) => sum + item.visibility_score, 0) /
+                      data.length
+                  )
+                : 0}
             </div>
             <div className="text-xs text-gray-600">Avg Visibility</div>
           </div>
           <div className="text-center">
             <div className="text-lg font-semibold text-gray-900">
-              {data.length > 0 ? formatValue(Math.max(...data.map(item => item.reach)), 'reach') : '0'}
+              {data.length > 0
+                ? formatValue(
+                    Math.max(...data.map((item) => item.reach)),
+                    "reach"
+                  )
+                : "0"}
             </div>
             <div className="text-xs text-gray-600">Peak Reach</div>
           </div>

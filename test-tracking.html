@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhoCrawledMe Tracking Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🤖 WhoCrawledMe Tracking Test</h1>
+
+        <div id="status" class="status info">
+            Initializing tracking test...
+        </div>
+
+        <div>
+            <button onclick="testTracking()">Test Tracking</button>
+            <button onclick="simulateBotVisit()">Simulate Bot Visit</button>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+
+        <div id="log" class="log">
+            <div>Tracking test initialized...</div>
+        </div>
+
+        <div class="info">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Click "Test Tracking" to send a test request to your tracking API</li>
+                <li>Click "Simulate Bot Visit" to simulate an AI bot visiting this page</li>
+                <li>Check your analytics dashboard to see if the data appears</li>
+                <li>Make sure your development server is running on localhost:3000</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const log = document.getElementById('log');
+        const status = document.getElementById('status');
+
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        function clearLog() {
+            log.innerHTML = '<div>Log cleared...</div>';
+        }
+
+        async function testTracking() {
+            addLog('Testing tracking API...');
+            updateStatus('Testing tracking API...', 'info');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/track', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: window.location.href,
+                        referrer: document.referrer,
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        test: true
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    addLog(`✅ Tracking successful: ${JSON.stringify(result)}`);
+                    updateStatus('Tracking test successful!', 'success');
+                } else {
+                    addLog(`❌ Tracking failed: ${JSON.stringify(result)}`);
+                    updateStatus('Tracking test failed!', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Network error: ${error.message}`);
+                updateStatus('Network error - make sure dev server is running!', 'error');
+            }
+        }
+
+        function simulateBotVisit() {
+            addLog('Simulating AI bot visit...');
+            updateStatus('Simulating AI bot visit...', 'info');
+
+            // Simulate different AI bot user agents
+            const botUserAgents = [
+                'Mozilla/5.0 (compatible; ChatGPT-User/1.0; +https://openai.com/bot)',
+                'Mozilla/5.0 (compatible; Claude-Web/1.0; +https://anthropic.com/bot)',
+                'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+                'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/bot)',
+                'Mozilla/5.0 (compatible; GPTBot/1.0; +https://openai.com/bot)'
+            ];
+
+            const randomBot = botUserAgents[Math.floor(Math.random() * botUserAgents.length)];
+
+            fetch('http://localhost:3000/api/track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'User-Agent': randomBot
+                },
+                body: JSON.stringify({
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    timestamp: new Date().toISOString(),
+                    userAgent: randomBot,
+                    test: true
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    addLog(`🤖 Simulated bot visit: ${randomBot}`);
+                    addLog(`✅ Response: ${JSON.stringify(result)}`);
+                    updateStatus('Bot visit simulated successfully!', 'success');
+                })
+                .catch(error => {
+                    addLog(`❌ Bot simulation failed: ${error.message}`);
+                    updateStatus('Bot simulation failed!', 'error');
+                });
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', () => {
+            addLog('Page loaded, ready for testing...');
+            updateStatus('Ready for testing', 'success');
+        });
+    </script>
+</body>
+
+</html>

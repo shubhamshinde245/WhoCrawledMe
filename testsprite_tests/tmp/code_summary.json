@@ -1,0 +1,116 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "Next.js 15.5.3",
+    "React 19.1.0",
+    "Tailwind CSS 4.x",
+    "Supabase",
+    "PostgreSQL",
+    "Chart.js",
+    "Recharts",
+    "Radix UI",
+    "Lucide React"
+  ],
+  "features": [
+    {
+      "name": "Dashboard",
+      "description": "Real-time bot activity monitoring dashboard with live updates",
+      "files": ["src/app/components/Dashboard.tsx"]
+    },
+    {
+      "name": "Analytics Dashboard",
+      "description": "Main intelligence platform with tabbed interface for comprehensive analytics",
+      "files": ["src/app/components/AnalyticsDashboard.tsx"]
+    },
+    {
+      "name": "AI Platform Monitoring",
+      "description": "Platform-specific tracking and monitoring of AI bot activities",
+      "files": ["src/app/components/AIPlatformMonitoring.tsx", "src/app/api/ai-platforms/route.ts"]
+    },
+    {
+      "name": "Brand Analytics",
+      "description": "Detailed brand performance metrics and visibility tracking",
+      "files": ["src/app/components/BrandAnalytics.tsx", "src/app/api/brand-analytics/route.ts"]
+    },
+    {
+      "name": "Brand Visibility Chart",
+      "description": "Visual representation of brand mention trends over time",
+      "files": ["src/app/components/BrandVisibilityChart.tsx"]
+    },
+    {
+      "name": "Competitive Intelligence",
+      "description": "Competitor analysis and benchmarking with SWOT analysis",
+      "files": ["src/app/components/CompetitiveIntelligence.tsx", "src/app/api/competitive-intelligence/route.ts"]
+    },
+    {
+      "name": "Content Optimization",
+      "description": "AI-powered content recommendations and optimization suggestions",
+      "files": ["src/app/components/ContentOptimization.tsx", "src/app/api/content-optimization/route.ts"]
+    },
+    {
+      "name": "Query Discovery",
+      "description": "Trending topics discovery and content gap analysis",
+      "files": ["src/app/components/QueryDiscovery.tsx", "src/app/api/query-discovery/route.ts"]
+    },
+    {
+      "name": "Real-Time Monitoring",
+      "description": "Live activity feed with alerts and real-time metrics",
+      "files": ["src/app/components/RealTimeMonitoring.tsx", "src/app/api/real-time/route.ts"]
+    },
+    {
+      "name": "Metrics Cards",
+      "description": "Key performance indicators display with summary statistics",
+      "files": ["src/app/components/MetricsCards.tsx"]
+    },
+    {
+      "name": "Visits Chart",
+      "description": "AI bot visit patterns visualization with time-series data",
+      "files": ["src/app/components/VisitsChart.tsx"]
+    },
+    {
+      "name": "Top Bots Chart",
+      "description": "Most active AI platforms ranking and activity visualization",
+      "files": ["src/app/components/TopBotsChart.tsx"]
+    },
+    {
+      "name": "Hourly Trends Chart",
+      "description": "Traffic patterns analysis by hour with bar chart visualization",
+      "files": ["src/app/components/HourlyTrendsChart.tsx"]
+    },
+    {
+      "name": "Share of Voice Chart",
+      "description": "Competitive share analysis and market positioning visualization",
+      "files": ["src/app/components/ShareOfVoiceChart.tsx"]
+    },
+    {
+      "name": "Time Range Filter",
+      "description": "Date range selection component for analytics filtering",
+      "files": ["src/app/components/TimeRangeFilter.tsx"]
+    },
+    {
+      "name": "Website Tracking API",
+      "description": "API endpoint for tracking bot visits and collecting analytics data",
+      "files": ["src/app/api/track/route.ts", "public/track.js"]
+    },
+    {
+      "name": "Analytics API",
+      "description": "Core analytics data processing and aggregation service",
+      "files": ["src/app/api/analytics/route.ts"]
+    },
+    {
+      "name": "UI Components",
+      "description": "Reusable UI components including cards, tabs, and badges",
+      "files": ["src/app/components/ui/card.tsx", "src/components/ui/card.tsx", "src/components/ui/tabs.tsx"]
+    },
+    {
+      "name": "Main Application",
+      "description": "Root application component with navigation and layout",
+      "files": ["src/app/page.tsx", "src/app/layout.tsx"]
+    },
+    {
+      "name": "Database Schema",
+      "description": "Supabase database migrations and table definitions",
+      "files": ["supabase/migrations/001_create_bot_visits.sql", "supabase/migrations/20231201000000_create_base_tables.sql", "supabase/migrations/20240101000000_enhance_ai_platform_intelligence.sql"]
+    }
+  ]
+}

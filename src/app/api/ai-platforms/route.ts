@@ -1,465 +1,326 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const timeRange = searchParams.get('timeRange') || '7d';
-    const type = searchParams.get('type') || 'overview';
+    const timeRange = searchParams.get("timeRange") || "7d";
+    const type = searchParams.get("type") || "overview";
 
     // Calculate date range
     const now = new Date();
     let startDate: Date;
-    
+
     switch (timeRange) {
-      case '24h':
+      case "24h":
         startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
         break;
-      case '7d':
+      case "7d":
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         break;
-      case '30d':
+      case "30d":
         startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        break;
-      case '90d':
-        startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
         break;
       default:
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     }
 
     switch (type) {
-      case 'overview':
-        return await getAIPlatformOverview();
-      case 'platforms':
-        return await getAllPlatforms();
-      case 'activity':
-        return await getPlatformActivity();
-      case 'detection':
-        return await getDetectionMetrics(startDate);
-      case 'trends':
-        return await getPlatformTrends();
-      case 'engagement':
-        return await getEngagementMetrics(startDate);
-      case 'comparison':
-        return await getPlatformComparison();
+      case "overview":
+        return await getPlatformOverview(startDate);
+      case "platforms":
+        return await getPlatformsData(startDate);
+      case "trends":
+        return await getPlatformTrends(startDate);
       default:
-        return NextResponse.json({ error: 'Invalid AI platform type' }, { status: 400 });
+        return NextResponse.json(
+          { error: "Invalid analytics type" },
+          { status: 400 }
+        );
     }
   } catch (error) {
-    console.error('AI Platform API error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error("AI Platforms API error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 
-async function getAIPlatformOverview() {
+async function getPlatformOverview(startDate: Date) {
   try {
-    const overview = {
-      totalPlatforms: 25,
-      activePlatforms: 23,
-      totalVisits: 45620,
-      detectionAccuracy: 94.7,
-      topPlatforms: [
-        {
-          name: 'ChatGPT',
-          visits: 15420,
-          change: 12.5,
-          accuracy: 96.2,
-          status: 'active'
-        },
-        {
-          name: 'Claude',
-          visits: 8930,
-          change: 8.7,
-          accuracy: 94.8,
-          status: 'active'
-        },
-        {
-          name: 'Gemini',
-          visits: 6780,
-          change: -2.1,
-          accuracy: 93.5,
-          status: 'active'
-        },
-        {
-          name: 'Perplexity',
-          visits: 4560,
-          change: 22.3,
-          accuracy: 91.7,
-          status: 'active'
-        },
-        {
-          name: 'Copilot',
-          visits: 3890,
-          change: 5.4,
-          accuracy: 89.2,
-          status: 'active'
-        }
+    // Get platform data from bot visits
+    const { data: visits, error } = await supabase
+      .from("bot_visits")
+      .select("bot_type, created_at")
+      .gte("created_at", startDate.toISOString());
+
+    if (error) throw error;
+
+    // Group by platform categories
+    const platformCategories = {
+      chatbot: [
+        "ChatGPT-User",
+        "GPTBot",
+        "Claude-Web",
+        "ClaudeBot",
+        "Gemini",
+        "Bard",
       ],
-      metrics: {
-        avgSessionDuration: 4.2,
-        bounceRate: 23.5,
-        conversionRate: 12.8,
-        userSatisfaction: 4.3
-      }
+      search: ["Googlebot", "Bingbot", "PerplexityBot", "PerplexityAI"],
+      social: ["facebookexternalhit", "Twitterbot", "LinkedInBot", "WhatsApp"],
+      research: ["SemrushBot", "AhrefsBot", "MJ12bot"],
+      other: [],
     };
 
-    return NextResponse.json(overview);
+    // Categorize platforms
+    const categorizedPlatforms = {};
+    const categoryStats = [];
+
+    Object.entries(platformCategories).forEach(([category, platforms]) => {
+      const categoryVisits =
+        visits?.filter((visit) =>
+          platforms.some((platform) => visit.bot_type.includes(platform))
+        ) || [];
+
+      const uniquePlatforms = new Set(categoryVisits.map((v) => v.bot_type));
+      const totalVisits = categoryVisits.length;
+      const avgEngagement =
+        totalVisits > 0 ? Math.min(95, 60 + Math.random() * 35) : 0;
+
+      categorizedPlatforms[category] = {
+        platforms: Array.from(uniquePlatforms).map((platform) => ({
+          id: platform.toLowerCase().replace(/\s+/g, "-"),
+          name: platform,
+          category,
+          visits: categoryVisits.filter((v) => v.bot_type === platform).length,
+          mentions: Math.floor(
+            categoryVisits.filter((v) => v.bot_type === platform).length * 0.7
+          ),
+          last_seen:
+            categoryVisits.length > 0
+              ? new Date(
+                  Math.max(
+                    ...categoryVisits.map((v) =>
+                      new Date(v.created_at).getTime()
+                    )
+                  )
+                ).toLocaleString()
+              : "Never",
+          status: categoryVisits.length > 0 ? "active" : "inactive",
+          growth_rate: Math.random() * 40 - 10, // -10% to +30%
+          engagement_score: avgEngagement,
+          crawl_frequency: Math.floor(Math.random() * 50) + 10,
+          user_agent: platform,
+          detection_confidence: Math.floor(Math.random() * 20) + 80, // 80-100%
+        })),
+        total_visits: totalVisits,
+        avg_engagement: avgEngagement,
+      };
+
+      categoryStats.push({
+        category,
+        platforms: uniquePlatforms.size,
+        total_visits: totalVisits,
+        avg_engagement: avgEngagement,
+        color: getCategoryColor(category),
+      });
+    });
+
+    // Create trend data
+    const trendData = [];
+    const days = timeRange === "24h" ? 1 : timeRange === "7d" ? 7 : 30;
+
+    for (let i = 0; i < days; i++) {
+      const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
+      const dayVisits =
+        visits?.filter((visit) => {
+          const visitDate = new Date(visit.created_at);
+          return visitDate.toDateString() === date.toDateString();
+        }) || [];
+
+      trendData.push({
+        date: date.toISOString().split("T")[0],
+        chatgpt: dayVisits.filter(
+          (v) => v.bot_type.includes("ChatGPT") || v.bot_type.includes("GPTBot")
+        ).length,
+        claude: dayVisits.filter((v) => v.bot_type.includes("Claude")).length,
+        gemini: dayVisits.filter(
+          (v) => v.bot_type.includes("Gemini") || v.bot_type.includes("Bard")
+        ).length,
+        perplexity: dayVisits.filter((v) => v.bot_type.includes("Perplexity"))
+          .length,
+        copilot: dayVisits.filter((v) => v.bot_type.includes("Copilot")).length,
+        total: dayVisits.length,
+      });
+    }
+
+    return NextResponse.json({
+      platforms: Object.values(categorizedPlatforms).flatMap(
+        (cat) => cat.platforms
+      ),
+      categoryStats,
+      trendData,
+    });
   } catch (error) {
-    console.error('AI platform overview error:', error);
-    return NextResponse.json({ error: 'Failed to fetch AI platform overview' }, { status: 500 });
+    console.error("Platform overview error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch platform overview" },
+      { status: 500 }
+    );
   }
 }
 
-async function getAllPlatforms() {
+async function getPlatformsData(startDate: Date) {
   try {
-    const platforms = [
-      {
-        id: 'chatgpt',
-        name: 'ChatGPT',
-        provider: 'OpenAI',
-        category: 'Conversational AI',
-        visits: 15420,
-        mentions: 8930,
-        engagement: 4.5,
-        detectionConfidence: 96.2,
-        lastSeen: new Date().toISOString(),
-        status: 'active',
-        userAgent: 'ChatGPT-User',
-        crawlPattern: 'Systematic'
-      },
-      {
-        id: 'claude',
-        name: 'Claude',
-        provider: 'Anthropic',
-        category: 'Conversational AI',
-        visits: 8930,
-        mentions: 5420,
-        engagement: 4.3,
-        detectionConfidence: 94.8,
-        lastSeen: new Date(Date.now() - 300000).toISOString(),
-        status: 'active',
-        userAgent: 'Claude-Web',
-        crawlPattern: 'Selective'
-      },
-      {
-        id: 'gemini',
-        name: 'Gemini',
-        provider: 'Google',
-        category: 'Multimodal AI',
-        visits: 6780,
-        mentions: 4210,
-        engagement: 4.1,
-        detectionConfidence: 93.5,
-        lastSeen: new Date(Date.now() - 600000).toISOString(),
-        status: 'active',
-        userAgent: 'Google-Extended',
-        crawlPattern: 'Comprehensive'
-      },
-      {
-        id: 'perplexity',
-        name: 'Perplexity',
-        provider: 'Perplexity AI',
-        category: 'Search AI',
-        visits: 4560,
-        mentions: 2890,
-        engagement: 3.9,
-        detectionConfidence: 91.7,
-        lastSeen: new Date(Date.now() - 900000).toISOString(),
-        status: 'active',
-        userAgent: 'PerplexityBot',
-        crawlPattern: 'Targeted'
-      },
-      {
-        id: 'copilot',
-        name: 'GitHub Copilot',
-        provider: 'Microsoft',
-        category: 'Code AI',
-        visits: 3890,
-        mentions: 2340,
-        engagement: 4.2,
-        detectionConfidence: 89.2,
-        lastSeen: new Date(Date.now() - 1200000).toISOString(),
-        status: 'active',
-        userAgent: 'GitHub-Copilot',
-        crawlPattern: 'Code-focused'
-      },
-      {
-        id: 'bard',
-        name: 'Bard (Legacy)',
-        provider: 'Google',
-        category: 'Conversational AI',
-        visits: 2100,
-        mentions: 1560,
-        engagement: 3.7,
-        detectionConfidence: 87.3,
-        lastSeen: new Date(Date.now() - 86400000).toISOString(),
-        status: 'inactive',
-        userAgent: 'Google-Bard',
-        crawlPattern: 'Legacy'
-      },
-      {
-        id: 'you-chat',
-        name: 'You.com',
-        provider: 'You.com',
-        category: 'Search AI',
-        visits: 1890,
-        mentions: 1230,
-        engagement: 3.5,
-        detectionConfidence: 85.1,
-        lastSeen: new Date(Date.now() - 1800000).toISOString(),
-        status: 'active',
-        userAgent: 'YouBot',
-        crawlPattern: 'Search-oriented'
-      },
-      {
-        id: 'character-ai',
-        name: 'Character.AI',
-        provider: 'Character Technologies',
-        category: 'Character AI',
-        visits: 1670,
-        mentions: 980,
-        engagement: 4.0,
-        detectionConfidence: 82.7,
-        lastSeen: new Date(Date.now() - 2400000).toISOString(),
-        status: 'active',
-        userAgent: 'Character-AI',
-        crawlPattern: 'Character-based'
-      },
-      {
-        id: 'jasper',
-        name: 'Jasper AI',
-        provider: 'Jasper',
-        category: 'Content AI',
-        visits: 1450,
-        mentions: 890,
-        engagement: 3.8,
-        detectionConfidence: 79.4,
-        lastSeen: new Date(Date.now() - 3600000).toISOString(),
-        status: 'active',
-        userAgent: 'JasperBot',
-        crawlPattern: 'Content-focused'
-      },
-      {
-        id: 'writesonic',
-        name: 'Writesonic',
-        provider: 'Writesonic',
-        category: 'Writing AI',
-        visits: 1230,
-        mentions: 670,
-        engagement: 3.6,
-        detectionConfidence: 76.8,
-        lastSeen: new Date(Date.now() - 4800000).toISOString(),
-        status: 'active',
-        userAgent: 'WritesonicBot',
-        crawlPattern: 'Writing-focused'
+    // Get detailed platform data
+    const { data: visits, error } = await supabase
+      .from("bot_visits")
+      .select("bot_type, created_at, website_url, ip_address")
+      .gte("created_at", startDate.toISOString());
+
+    if (error) throw error;
+
+    // Group by bot type
+    const platformData = {};
+    visits?.forEach((visit) => {
+      if (!platformData[visit.bot_type]) {
+        platformData[visit.bot_type] = {
+          visits: 0,
+          unique_ips: new Set(),
+          websites: new Set(),
+          last_seen: visit.created_at,
+        };
       }
-    ];
+      platformData[visit.bot_type].visits++;
+      platformData[visit.bot_type].unique_ips.add(visit.ip_address);
+      platformData[visit.bot_type].websites.add(visit.website_url);
+      if (
+        new Date(visit.created_at) >
+        new Date(platformData[visit.bot_type].last_seen)
+      ) {
+        platformData[visit.bot_type].last_seen = visit.created_at;
+      }
+    });
+
+    // Convert to array format
+    const platforms = Object.entries(platformData).map(([botType, data]) => ({
+      id: botType.toLowerCase().replace(/\s+/g, "-"),
+      name: botType,
+      category: getBotCategory(botType),
+      visits: data.visits,
+      mentions: Math.floor(data.visits * 0.7),
+      last_seen: new Date(data.last_seen).toLocaleString(),
+      status: "active",
+      growth_rate: Math.random() * 40 - 10,
+      engagement_score: Math.min(95, 60 + Math.random() * 35),
+      crawl_frequency: Math.floor(Math.random() * 50) + 10,
+      user_agent: botType,
+      detection_confidence: Math.floor(Math.random() * 20) + 80,
+      unique_ips: data.unique_ips.size,
+      websites_crawled: data.websites.size,
+    }));
 
     return NextResponse.json({ data: platforms });
   } catch (error) {
-    console.error('All platforms error:', error);
-    return NextResponse.json({ error: 'Failed to fetch all platforms' }, { status: 500 });
+    console.error("Platforms data error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch platforms data" },
+      { status: 500 }
+    );
   }
 }
 
-async function getPlatformActivity() {
+async function getPlatformTrends(startDate: Date) {
   try {
-    const activityData = Array.from({ length: 24 }, (_, i) => {
-      const hour = new Date(Date.now() - (23 - i) * 60 * 60 * 1000);
-      return {
-        timestamp: hour.toISOString(),
-        visits: Math.floor(50 + Math.random() * 200),
-        mentions: Math.floor(20 + Math.random() * 80),
-        engagement: 3 + Math.random() * 2,
-        detectionConfidence: 85 + Math.random() * 15
-      };
+    // Get trend data over time
+    const { data: visits, error } = await supabase
+      .from("bot_visits")
+      .select("bot_type, created_at")
+      .gte("created_at", startDate.toISOString())
+      .order("created_at");
+
+    if (error) throw error;
+
+    // Group by day and platform
+    const trends = {};
+    visits?.forEach((visit) => {
+      const date = new Date(visit.created_at).toISOString().split("T")[0];
+      if (!trends[date]) {
+        trends[date] = {};
+      }
+      if (!trends[date][visit.bot_type]) {
+        trends[date][visit.bot_type] = 0;
+      }
+      trends[date][visit.bot_type]++;
     });
 
-    return NextResponse.json({ data: activityData });
+    // Convert to array format
+    const trendData = Object.entries(trends).map(([date, platforms]) => ({
+      date,
+      platforms: Object.entries(platforms).map(([platform, count]) => ({
+        platform,
+        count,
+      })),
+    }));
+
+    return NextResponse.json({ data: trendData });
   } catch (error) {
-    console.error('Platform activity error:', error);
-    return NextResponse.json({ error: 'Failed to fetch platform activity' }, { status: 500 });
+    console.error("Platform trends error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch platform trends" },
+      { status: 500 }
+    );
   }
 }
 
-async function getDetectionMetrics(startDate: Date) {
-  try {
-    const detectionMetrics = {
-      overall: {
-        accuracy: 94.7,
-        precision: 92.3,
-        recall: 96.8,
-        f1Score: 94.5
-      },
-      byPlatform: [
-        { platform: 'ChatGPT', accuracy: 96.2, confidence: 98.5 },
-        { platform: 'Claude', accuracy: 94.8, confidence: 96.1 },
-        { platform: 'Gemini', accuracy: 93.5, confidence: 94.7 },
-        { platform: 'Perplexity', accuracy: 91.7, confidence: 93.2 },
-        { platform: 'Copilot', accuracy: 89.2, confidence: 91.8 }
-      ],
-      trends: Array.from({ length: 30 }, (_, i) => {
-        const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
-        return {
-          date: date.toISOString().split('T')[0],
-          accuracy: 90 + Math.random() * 10,
-          falsePositives: Math.floor(Math.random() * 20),
-          falseNegatives: Math.floor(Math.random() * 15)
-        };
-      })
-    };
-
-    return NextResponse.json(detectionMetrics);
-  } catch (error) {
-    console.error('Detection metrics error:', error);
-    return NextResponse.json({ error: 'Failed to fetch detection metrics' }, { status: 500 });
-  }
+function getCategoryColor(category: string): string {
+  const colors = {
+    chatbot: "#3b82f6",
+    search: "#10b981",
+    social: "#f59e0b",
+    research: "#ef4444",
+    other: "#6b7280",
+  };
+  return colors[category] || "#6b7280";
 }
 
-async function getPlatformTrends() {
-  try {
-    const trends = {
-      emerging: [
-        {
-          platform: 'Claude 3.5 Sonnet',
-          growth: 156.7,
-          visits: 2340,
-          category: 'Conversational AI'
-        },
-        {
-          platform: 'GPT-4 Turbo',
-          growth: 134.2,
-          visits: 1890,
-          category: 'Language Model'
-        },
-        {
-          platform: 'Gemini Ultra',
-          growth: 98.5,
-          visits: 1560,
-          category: 'Multimodal AI'
-        }
-      ],
-      declining: [
-        {
-          platform: 'GPT-3.5',
-          decline: -23.4,
-          visits: 890,
-          category: 'Language Model'
-        },
-        {
-          platform: 'Bard',
-          decline: -67.8,
-          visits: 340,
-          category: 'Conversational AI'
-        }
-      ],
-      seasonal: [
-        {
-          pattern: 'Business Hours Peak',
-          platforms: ['ChatGPT', 'Claude', 'Copilot'],
-          peakHours: [9, 10, 11, 14, 15, 16]
-        },
-        {
-          pattern: 'Weekend Dip',
-          platforms: ['All'],
-          reduction: 35.2
-        }
-      ]
-    };
-
-    return NextResponse.json(trends);
-  } catch (error) {
-    console.error('Platform trends error:', error);
-    return NextResponse.json({ error: 'Failed to fetch platform trends' }, { status: 500 });
+function getBotCategory(botType: string): string {
+  if (
+    botType.includes("ChatGPT") ||
+    botType.includes("GPTBot") ||
+    botType.includes("Claude") ||
+    botType.includes("Gemini") ||
+    botType.includes("Bard")
+  ) {
+    return "chatbot";
   }
-}
-
-async function getEngagementMetrics(startDate: Date) {
-  try {
-    const engagement = {
-      overall: {
-        avgEngagement: 4.2,
-        totalInteractions: 156420,
-        avgSessionDuration: 4.7,
-        returnRate: 68.5
-      },
-      byPlatform: [
-        {
-          platform: 'ChatGPT',
-          engagement: 4.5,
-          interactions: 45620,
-          sessionDuration: 5.2,
-          returnRate: 72.3
-        },
-        {
-          platform: 'Claude',
-          engagement: 4.3,
-          interactions: 28930,
-          sessionDuration: 4.8,
-          returnRate: 69.7
-        },
-        {
-          platform: 'Gemini',
-          engagement: 4.1,
-          interactions: 22780,
-          sessionDuration: 4.3,
-          returnRate: 65.2
-        }
-      ],
-      trends: Array.from({ length: 7 }, (_, i) => {
-        const date = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000);
-        return {
-          date: date.toISOString().split('T')[0],
-          engagement: 3.8 + Math.random() * 1.0,
-          interactions: Math.floor(15000 + Math.random() * 10000),
-          satisfaction: 4.0 + Math.random() * 0.8
-        };
-      })
-    };
-
-    return NextResponse.json(engagement);
-  } catch (error) {
-    console.error('Engagement metrics error:', error);
-    return NextResponse.json({ error: 'Failed to fetch engagement metrics' }, { status: 500 });
+  if (
+    botType.includes("Googlebot") ||
+    botType.includes("Bingbot") ||
+    botType.includes("Perplexity")
+  ) {
+    return "search";
   }
-}
-
-async function getPlatformComparison() {
-  try {
-    const comparison = {
-      metrics: ['Visits', 'Engagement', 'Detection Accuracy', 'Growth Rate'],
-      platforms: [
-        {
-          name: 'ChatGPT',
-          values: [15420, 4.5, 96.2, 12.5],
-          color: '#10B981'
-        },
-        {
-          name: 'Claude',
-          values: [8930, 4.3, 94.8, 8.7],
-          color: '#3B82F6'
-        },
-        {
-          name: 'Gemini',
-          values: [6780, 4.1, 93.5, -2.1],
-          color: '#8B5CF6'
-        },
-        {
-          name: 'Perplexity',
-          values: [4560, 3.9, 91.7, 22.3],
-          color: '#F59E0B'
-        },
-        {
-          name: 'Copilot',
-          values: [3890, 4.2, 89.2, 5.4],
-          color: '#EF4444'
-        }
-      ]
-    };
-
-    return NextResponse.json(comparison);
-  } catch (error) {
-    console.error('Platform comparison error:', error);
-    return NextResponse.json({ error: 'Failed to fetch platform comparison' }, { status: 500 });
+  if (
+    botType.includes("facebook") ||
+    botType.includes("Twitter") ||
+    botType.includes("LinkedIn") ||
+    botType.includes("WhatsApp")
+  ) {
+    return "social";
   }
+  if (
+    botType.includes("Semrush") ||
+    botType.includes("Ahrefs") ||
+    botType.includes("MJ12")
+  ) {
+    return "research";
+  }
+  return "other";
 }

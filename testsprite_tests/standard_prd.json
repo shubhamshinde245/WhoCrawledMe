@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "project": "WhoCrawledMe AI Platform Intelligence System",
+    "date": "2025-09-13",
+    "prepared_by": "Software Development Manager"
+  },
+  "product_overview": "WhoCrawledMe is a comprehensive AI-era intelligence platform providing real-time monitoring, tracking, and analytics of brand visibility and AI bot activities across 25+ AI platforms including ChatGPT, Claude, Gemini, Perplexity, and traditional web crawlers. It helps brand managers, SEO professionals, and digital marketers gain unprecedented insights into how their content performs in AI-generated responses through advanced analytics and AI-driven content optimization.",
+  "core_goals": [
+    "Provide real-time AI bot detection and classification for website traffic from multiple AI platforms",
+    "Enable monitoring and detailed analytics of brand visibility and share-of-voice across AI platforms and traditional crawlers",
+    "Offer competitive intelligence with benchmarking against competitors on AI platform positioning",
+    "Deliver AI-driven content optimization and query discovery to identify trending topics and content gaps",
+    "Support website owners with comprehensive dashboards and visualizations to understand AI bot impact and optimize for Generative Engine Optimization (GEO)"
+  ],
+  "key_features": [
+    "Real-time Dashboard with live AI bot activity feed, confidence scores, and geographic/network intelligence",
+    "AI Platform Monitoring across 25+ platforms including ChatGPT, Claude, Gemini, Perplexity",
+    "Competitive Intelligence with share-of-voice market analysis and SWOT benchmarking",
+    "Query Discovery feature for trending topics and content gap identification",
+    "Brand Analytics to track mention rates, rank positions, and coverage gaps over time",
+    "Content Optimization offering AI-powered recommendations for improved platform visibility",
+    "Advanced comprehensive analytics dashboards with tabbed interfaces and filtered views",
+    "Multiple interactive charts: Brand Visibility, Share of Voice, Visits, Top Bots, Hourly Trends",
+    "Real-Time Monitoring with instant alerts and live metrics feed",
+    "Customizable Time Range Filter for date-based analysis",
+    "Robust Website Tracking API supporting JS script and pixel tracking",
+    "Modern, responsive UI design with Glass Morphism style using Radix UI and Tailwind CSS",
+    "Integration with Supabase for real-time data synchronization and PostgreSQL storage",
+    "Scalable backend API endpoints to handle analytics and tracking data"
+  ],
+  "user_flow_summary": [
+    "User logs into the platform and accesses the Real-time Dashboard to view live AI bot activity and key metrics",
+    "User selects date range filters to analyze historical data and trends via the Analytics Dashboard",
+    "User navigates through various analytics tabs: Brand, Competitive, AI Platforms, Queries, Content, Real-Time for specialized insights",
+    "User reviews Competitive Intelligence tab to benchmark brand visibility against competitors using share-of-voice charts",
+    "User explores Query Discovery to identify trending topics and content gaps for optimization",
+    "User reviews AI-driven Content Optimization suggestions and applies recommendations to improve AI platform visibility",
+    "User integrates the website tracking script or pixel provided into their website to enable bot visit collection",
+    "User monitors incoming bot traffic in real-time via the Real-Time Monitoring tab with alerts and live feed",
+    "User exports reports or shares insights with stakeholders through the dashboard interface"
+  ],
+  "validation_criteria": [
+    "Real-time AI bot detection accuracy above 95% with confidence scoring and classification",
+    "Dashboard live updates are delivered with latency under 2 seconds for real-time monitoring",
+    "API endpoints for tracking and analytics respond within 200ms under normal load",
+    "Brand visibility and competitive intelligence charts accurately reflect the data aggregated from AI bot visits",
+    "Content optimization recommendations are generated based on current data trends and user feedback",
+    "Website tracking script and pixel correctly collect visit data and integrate seamlessly with Supabase backend",
+    "UI components render consistently across supported browsers and device sizes with responsive design",
+    "Security protocols ensure user data privacy and roles-based access control are enforced",
+    "System supports subscription-tiered access with limitations on visits, retention, and API access as specified",
+    "Comprehensive logging and error handling implemented for troubleshooting and system monitoring"
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "Next.js 15.5.3",
+      "React 19.1.0",
+      "Tailwind CSS 4.x",
+      "Supabase",
+      "PostgreSQL",
+      "Chart.js",
+      "Recharts",
+      "Radix UI",
+      "Lucide React"
+    ],
+    "features": [
+      {
+        "name": "Dashboard",
+        "description": "Real-time bot activity monitoring dashboard with live updates",
+        "files": [
+          "src/app/components/Dashboard.tsx"
+        ]
+      },
+      {
+        "name": "Analytics Dashboard",
+        "description": "Main intelligence platform with tabbed interface for comprehensive analytics",
+        "files": [
+          "src/app/components/AnalyticsDashboard.tsx"
+        ]
+      },
+      {
+        "name": "AI Platform Monitoring",
+        "description": "Platform-specific tracking and monitoring of AI bot activities",
+        "files": [
+          "src/app/components/AIPlatformMonitoring.tsx",
+          "src/app/api/ai-platforms/route.ts"
+        ]
+      },
+      {
+        "name": "Brand Analytics",
+        "description": "Detailed brand performance metrics and visibility tracking",
+        "files": [
+          "src/app/components/BrandAnalytics.tsx",
+          "src/app/api/brand-analytics/route.ts"
+        ]
+      },
+      {
+        "name": "Brand Visibility Chart",
+        "description": "Visual representation of brand mention trends over time",
+        "files": [
+          "src/app/components/BrandVisibilityChart.tsx"
+        ]
+      },
+      {
+        "name": "Competitive Intelligence",
+        "description": "Competitor analysis and benchmarking with SWOT analysis",
+        "files": [
+          "src/app/components/CompetitiveIntelligence.tsx",
+          "src/app/api/competitive-intelligence/route.ts"
+        ]
+      },
+      {
+        "name": "Content Optimization",
+        "description": "AI-powered content recommendations and optimization suggestions",
+        "files": [
+          "src/app/components/ContentOptimization.tsx",
+          "src/app/api/content-optimization/route.ts"
+        ]
+      },
+      {
+        "name": "Query Discovery",
+        "description": "Trending topics discovery and content gap analysis",
+        "files": [
+          "src/app/components/QueryDiscovery.tsx",
+          "src/app/api/query-discovery/route.ts"
+        ]
+      },
+      {
+        "name": "Real-Time Monitoring",
+        "description": "Live activity feed with alerts and real-time metrics",
+        "files": [
+          "src/app/components/RealTimeMonitoring.tsx",
+          "src/app/api/real-time/route.ts"
+        ]
+      },
+      {
+        "name": "Metrics Cards",
+        "description": "Key performance indicators display with summary statistics",
+        "files": [
+          "src/app/components/MetricsCards.tsx"
+        ]
+      },
+      {
+        "name": "Visits Chart",
+        "description": "AI bot visit patterns visualization with time-series data",
+        "files": [
+          "src/app/components/VisitsChart.tsx"
+        ]
+      },
+      {
+        "name": "Top Bots Chart",
+        "description": "Most active AI platforms ranking and activity visualization",
+        "files": [
+          "src/app/components/TopBotsChart.tsx"
+        ]
+      },
+      {
+        "name": "Hourly Trends Chart",
+        "description": "Traffic patterns analysis by hour with bar chart visualization",
+        "files": [
+          "src/app/components/HourlyTrendsChart.tsx"
+        ]
+      },
+      {
+        "name": "Share of Voice Chart",
+        "description": "Competitive share analysis and market positioning visualization",
+        "files": [
+          "src/app/components/ShareOfVoiceChart.tsx"
+        ]
+      },
+      {
+        "name": "Time Range Filter",
+        "description": "Date range selection component for analytics filtering",
+        "files": [
+          "src/app/components/TimeRangeFilter.tsx"
+        ]
+      },
+      {
+        "name": "Website Tracking API",
+        "description": "API endpoint for tracking bot visits and collecting analytics data",
+        "files": [
+          "src/app/api/track/route.ts",
+          "public/track.js"
+        ]
+      },
+      {
+        "name": "Analytics API",
+        "description": "Core analytics data processing and aggregation service",
+        "files": [
+          "src/app/api/analytics/route.ts"
+        ]
+      },
+      {
+        "name": "UI Components",
+        "description": "Reusable UI components including cards, tabs, and badges",
+        "files": [
+          "src/app/components/ui/card.tsx",
+          "src/components/ui/card.tsx",
+          "src/components/ui/tabs.tsx"
+        ]
+      },
+      {
+        "name": "Main Application",
+        "description": "Root application component with navigation and layout",
+        "files": [
+          "src/app/page.tsx",
+          "src/app/layout.tsx"
+        ]
+      },
+      {
+        "name": "Database Schema",
+        "description": "Supabase database migrations and table definitions",
+        "files": [
+          "supabase/migrations/001_create_bot_visits.sql",
+          "supabase/migrations/20231201000000_create_base_tables.sql",
+          "supabase/migrations/20240101000000_enhance_ai_platform_intelligence.sql"
+        ]
+      }
+    ]
+  }
+}
