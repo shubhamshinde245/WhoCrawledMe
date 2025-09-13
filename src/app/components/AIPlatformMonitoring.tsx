@@ -64,7 +64,7 @@ export default function AIPlatformMonitoring({
 }: AIPlatformMonitoringProps) {
   const [platforms, setPlatforms] = useState<PlatformData[]>([]);
   const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
-  const [trendData, setTrendData] = useState<TrendData[]>([]);
+  const [_trendData, setTrendData] = useState<TrendData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("visits");

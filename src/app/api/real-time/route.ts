@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     switch (type) {
       case "overview":
-        return await getRealTimeOverview(startDate);
+        return await getRealTimeOverview(startDate, timeRange);
       case "activities":
         return await getLiveActivities(startDate);
       case "alerts":
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function getRealTimeOverview(startDate: Date) {
+async function getRealTimeOverview(startDate: Date, timeRange: string) {
   try {
     // Get recent bot visits for live activity
     const { data: recentVisits, error } = await supabase
@@ -82,7 +82,16 @@ async function getRealTimeOverview(startDate: Date) {
       })) || [];
 
     // Generate mock alerts based on activity patterns
-    const alerts = [];
+    const alerts: Array<{
+      id: string;
+      title: string;
+      description: string;
+      severity: string;
+      timestamp: string;
+      status: string;
+      category: string;
+      affected_platforms: string[];
+    }> = [];
     if (recentVisits && recentVisits.length > 0) {
       const highActivityBots = recentVisits.reduce((acc, visit) => {
         acc[visit.bot_type] = (acc[visit.bot_type] || 0) + 1;

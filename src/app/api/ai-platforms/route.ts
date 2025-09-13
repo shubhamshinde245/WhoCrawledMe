@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     switch (type) {
       case "overview":
-        return await getPlatformOverview(startDate);
+        return await getPlatformOverview(startDate, timeRange);
       case "platforms":
         return await getPlatformsData(startDate);
       case "trends":
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function getPlatformOverview(startDate: Date) {
+async function getPlatformOverview(startDate: Date, timeRange: string) {
   try {
     // Get platform data from bot visits
     const { data: visits, error } = await supabase
@@ -79,8 +79,33 @@ async function getPlatformOverview(startDate: Date) {
     };
 
     // Categorize platforms
-    const categorizedPlatforms = {};
-    const categoryStats = [];
+    interface CategoryData {
+      platforms: Array<{
+        id: string;
+        name: string;
+        category: string;
+        visits: number;
+        mentions: number;
+        last_seen: string;
+        status: string;
+        growth_rate: number;
+        engagement_score: number;
+        crawl_frequency: number;
+        user_agent: string;
+        detection_confidence: number;
+      }>;
+      total_visits: number;
+      avg_engagement: number;
+    }
+
+    const categorizedPlatforms: Record<string, CategoryData> = {};
+    const categoryStats: Array<{
+      category: string;
+      platforms: number;
+      total_visits: number;
+      avg_engagement: number;
+      color: string;
+    }> = [];
 
     Object.entries(platformCategories).forEach(([category, platforms]) => {
       const categoryVisits =
@@ -187,7 +212,15 @@ async function getPlatformsData(startDate: Date) {
     if (error) throw error;
 
     // Group by bot type
-    const platformData = {};
+    const platformData: Record<
+      string,
+      {
+        visits: number;
+        unique_ips: Set<string>;
+        websites: Set<string>;
+        last_seen: string;
+      }
+    > = {};
     visits?.forEach((visit) => {
       if (!platformData[visit.bot_type]) {
         platformData[visit.bot_type] = {
@@ -248,7 +281,7 @@ async function getPlatformTrends(startDate: Date) {
     if (error) throw error;
 
     // Group by day and platform
-    const trends = {};
+    const trends: Record<string, Record<string, number>> = {};
     visits?.forEach((visit) => {
       const date = new Date(visit.created_at).toISOString().split("T")[0];
       if (!trends[date]) {
@@ -280,7 +313,7 @@ async function getPlatformTrends(startDate: Date) {
 }
 
 function getCategoryColor(category: string): string {
-  const colors = {
+  const colors: Record<string, string> = {
     chatbot: "#3b82f6",
     search: "#10b981",
     social: "#f59e0b",

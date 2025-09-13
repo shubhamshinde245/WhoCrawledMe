@@ -8,34 +8,34 @@ export async function GET(request: NextRequest) {
 
     // Calculate date range
     const now = new Date();
-    let startDate: Date;
+    let _startDate: Date;
 
     switch (timeRange) {
       case "24h":
-        startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        _startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
         break;
       case "7d":
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        _startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         break;
       case "30d":
-        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        _startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         break;
       case "90d":
-        startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+        _startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
         break;
       default:
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        _startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     }
 
     switch (type) {
       case "overview":
         return await getBrandOverview();
       case "visibility":
-        return await getBrandVisibility(startDate);
+        return await getBrandVisibility();
       case "mentions":
         return await getBrandMentions();
       case "sentiment":
-        return await getBrandSentiment(startDate);
+        return await getBrandSentiment();
       case "competitors":
         return await getCompetitorComparison();
       case "health":
@@ -78,7 +78,7 @@ async function getBrandOverview() {
   }
 }
 
-async function getBrandVisibility(startDate: Date) {
+async function getBrandVisibility() {
   try {
     // Return empty data for real-time implementation
     return NextResponse.json({ data: [] });
@@ -104,7 +104,7 @@ async function getBrandMentions() {
   }
 }
 
-async function getBrandSentiment(startDate: Date) {
+async function getBrandSentiment() {
   try {
     // Return empty data for real-time implementation
     return NextResponse.json({

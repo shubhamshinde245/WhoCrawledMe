@@ -14,7 +14,6 @@ import {
   TrendingUp,
   Target,
   Clock,
-  Users,
   BarChart3,
   AlertCircle,
   CheckCircle,
@@ -159,8 +158,8 @@ export default function ContentOptimization({
             Content Optimization Recommendations
           </CardTitle>
           <CardDescription>
-            AI-powered suggestions to improve your content's visibility across
-            AI platforms
+            AI-powered suggestions to improve your content&apos;s visibility
+            across AI platforms
           </CardDescription>
         </CardHeader>
         <CardContent>

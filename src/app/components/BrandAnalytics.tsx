@@ -82,16 +82,15 @@ interface TopMention {
 
 export default function BrandAnalytics({ timeRange }: BrandAnalyticsProps) {
   const [brandMetrics, setBrandMetrics] = useState<BrandMetric[]>([]);
-  const [brandTrends, setBrandTrends] = useState<BrandTrend[]>([]);
-  const [sentimentData, setSentimentData] = useState<SentimentData[]>([]);
+  const [_brandTrends, setBrandTrends] = useState<BrandTrend[]>([]);
+  const [_sentimentData, setSentimentData] = useState<SentimentData[]>([]);
   const [competitorData, setCompetitorData] = useState<CompetitorComparison[]>(
     []
   );
   const [brandHealth, setBrandHealth] = useState<BrandHealth[]>([]);
   const [topMentions, setTopMentions] = useState<TopMention[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedMetric, setSelectedMetric] =
-    useState<string>("visibility_score");
+  // const [selectedMetric, setSelectedMetric] = useState<string>("visibility_score");
 
   useEffect(() => {
     const fetchBrandData = async () => {
@@ -292,8 +291,8 @@ export default function BrandAnalytics({ timeRange }: BrandAnalyticsProps) {
               Brand Health Overview
             </CardTitle>
             <CardDescription>
-              Comprehensive assessment of your brand's performance across AI
-              platforms
+              Comprehensive assessment of your brand&apos;s performance across
+              AI platforms
             </CardDescription>
           </CardHeader>
           <CardContent>

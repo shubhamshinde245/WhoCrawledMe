@@ -15,11 +15,8 @@ import {
   CheckCircle,
   Clock,
   Globe,
-  Zap,
-  Eye,
   Bot,
   AlertCircle,
-  TrendingUp,
 } from "lucide-react";
 
 interface RealTimeMonitoringProps {

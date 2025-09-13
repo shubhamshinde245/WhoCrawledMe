@@ -3,26 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const timeRange = searchParams.get("timeRange") || "7d";
+    const _timeRange = searchParams.get("timeRange") || "7d";
     const type = searchParams.get("type") || "overview";
 
-    // Calculate date range
-    const now = new Date();
-    let startDate: Date;
-
-    switch (timeRange) {
-      case "24h":
-        startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-        break;
-      case "7d":
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        break;
-      case "30d":
-        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        break;
-      default:
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    }
+    // Calculate date range (currently unused in mock implementation)
+    // const now = new Date();
+    // let startDate: Date;
+    // switch (timeRange) { ... }
 
     switch (type) {
       case "overview":

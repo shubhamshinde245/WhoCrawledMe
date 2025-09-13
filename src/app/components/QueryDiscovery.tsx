@@ -15,9 +15,6 @@ import {
   Target,
   Clock,
   Users,
-  BarChart3,
-  AlertCircle,
-  CheckCircle,
   AlertTriangle,
   Eye,
 } from "lucide-react";
