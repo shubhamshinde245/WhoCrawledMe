@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { useEffect, useState, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards';
 
 interface MetricsData {
   totalVisits: number;
@@ -19,11 +19,7 @@ export default function MetricsCards({ timeRange }: MetricsCardsProps) {
   const [metrics, setMetrics] = useState<MetricsData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchMetrics();
-  }, [timeRange]);
-
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/analytics?type=overview&timeRange=${timeRange}`);
@@ -34,7 +30,11 @@ export default function MetricsCards({ timeRange }: MetricsCardsProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    fetchMetrics();
+  }, [fetchMetrics]);
 
   if (loading) {
     return (

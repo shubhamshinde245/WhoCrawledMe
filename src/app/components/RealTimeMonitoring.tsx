@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
-import { Activity, Zap, Globe, Bot, AlertTriangle, CheckCircle, Clock, TrendingUp, Users, Eye, MessageSquare, Search, Filter } from 'lucide-react';
+import { Activity, Zap, Bot, AlertTriangle, CheckCircle, Clock, Users, Search } from 'lucide-react';
 
 interface RealTimeMonitoringProps {
   timeRange: string;
@@ -84,15 +84,15 @@ export default function RealTimeMonitoring({ timeRange }: RealTimeMonitoringProp
   const [isConnected, setIsConnected] = useState(false);
   const [selectedActivityType, setSelectedActivityType] = useState<string>('all');
   const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
-  const wsRef = useRef<WebSocket | null>(null);
+  // const wsRef = useRef<WebSocket | null>(null);
   const metricsIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Simulate WebSocket connection
   useEffect(() => {
     const fetchRealTimeData = async () => {
       try {
-        const response = await fetch('/api/real-time?type=overview');
-        const data = await response.json();
+        // const response = await fetch('/api/real-time?type=overview');
+        // const data = await response.json();
         // Update state with real data when backend is ready
       } catch (error) {
         console.error('Failed to fetch real-time data:', error);
@@ -115,10 +115,10 @@ export default function RealTimeMonitoring({ timeRange }: RealTimeMonitoringProp
           const newActivity: LiveActivity = {
             id: Date.now().toString(),
             timestamp: new Date().toISOString(),
-            type: ['visit', 'crawl', 'mention', 'query', 'alert', 'optimization'][Math.floor(Math.random() * 6)] as any,
+            type: ['visit', 'crawl', 'mention', 'query', 'alert', 'optimization'][Math.floor(Math.random() * 6)] as 'visit' | 'crawl' | 'mention' | 'query' | 'alert' | 'optimization',
             platform: ['ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'Copilot', 'Bard'][Math.floor(Math.random() * 6)],
             description: generateRandomActivity(),
-            severity: ['low', 'medium', 'high', 'critical'][Math.floor(Math.random() * 4)] as any,
+            severity: ['low', 'medium', 'high', 'critical'][Math.floor(Math.random() * 4)] as 'low' | 'medium' | 'high' | 'critical',
             metadata: {
               ip: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
               confidence: Math.floor(Math.random() * 40) + 60,
@@ -183,10 +183,10 @@ export default function RealTimeMonitoring({ timeRange }: RealTimeMonitoringProp
         const mockActivities: LiveActivity[] = Array.from({ length: 20 }, (_, i) => ({
           id: (Date.now() - i * 1000).toString(),
           timestamp: new Date(Date.now() - i * 1000).toISOString(),
-          type: ['visit', 'crawl', 'mention', 'query', 'alert', 'optimization'][Math.floor(Math.random() * 6)] as any,
+          type: ['visit', 'crawl', 'mention', 'query', 'alert', 'optimization'][Math.floor(Math.random() * 6)] as 'visit' | 'crawl' | 'mention' | 'query' | 'alert' | 'optimization',
           platform: ['ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'Copilot', 'Bard'][Math.floor(Math.random() * 6)],
           description: 'Initial activity data loaded',
-          severity: ['low', 'medium', 'high', 'critical'][Math.floor(Math.random() * 4)] as any,
+          severity: ['low', 'medium', 'high', 'critical'][Math.floor(Math.random() * 4)] as 'low' | 'medium' | 'high' | 'critical',
           metadata: {
             ip: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
             confidence: Math.floor(Math.random() * 40) + 60,
@@ -270,9 +270,9 @@ export default function RealTimeMonitoring({ timeRange }: RealTimeMonitoringProp
     connectWebSocket();
 
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
+      // if (wsRef.current) {
+      //   wsRef.current.close();
+      // }
       if (metricsIntervalRef.current) {
         clearInterval(metricsIntervalRef.current);
       }

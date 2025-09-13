@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/cards';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { Lightbulb, Target, TrendingUp, FileText, Zap, CheckCircle, AlertCircle, Star, ThumbsUp, Eye, Clock, Hash } from 'lucide-react';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { Lightbulb, Target, TrendingUp, CheckCircle } from 'lucide-react';
 
 interface ContentOptimizationProps {
   timeRange: string;
@@ -87,9 +87,9 @@ export default function ContentOptimization({ timeRange }: ContentOptimizationPr
     const fetchContentData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/content-optimization?timeRange=${timeRange}&type=overview`);
-        const data = await response.json();
-        // Update state with real data when backend is ready
+        // const response = await fetch(`/api/content-optimization?timeRange=${timeRange}&type=overview`);
+        // const data = await response.json();
+        // Update state with real data when backend is ready  
         
         // Mock content recommendations data for now
         const mockRecommendations: ContentRecommendation[] = [
@@ -517,8 +517,8 @@ export default function ContentOptimization({ timeRange }: ContentOptimizationPr
               className="px-3 py-2 bg-white/80 border border-gray-200 rounded-lg text-sm"
             >
               <option value="all">All Categories</option>
-              <option value="AI & Ethics">AI & Ethics</option>
-              <option value="SEO & Keywords">SEO & Keywords</option>
+              <option value="AI &amp; Ethics">AI &amp; Ethics</option>
+                <option value="SEO &amp; Keywords">SEO &amp; Keywords</option>
               <option value="Interactive Content">Interactive Content</option>
               <option value="Publishing Strategy">Publishing Strategy</option>
               <option value="Platform Strategy">Platform Strategy</option>
@@ -527,7 +527,7 @@ export default function ContentOptimization({ timeRange }: ContentOptimizationPr
             
             <select 
               value={sortBy} 
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'impact' | 'priority' | 'confidence')}
               className="px-3 py-2 bg-white/80 border border-gray-200 rounded-lg text-sm"
             >
               <option value="impact">Sort by Impact</option>

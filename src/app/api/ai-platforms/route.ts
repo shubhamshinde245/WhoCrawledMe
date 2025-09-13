@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const timeRange = searchParams.get('timeRange') || '7d';
     const type = searchParams.get('type') || 'overview';
-    const platform = searchParams.get('platform');
 
     // Calculate date range
     const now = new Date();
@@ -36,19 +29,19 @@ export async function GET(request: NextRequest) {
 
     switch (type) {
       case 'overview':
-        return await getAIPlatformOverview(startDate);
+        return await getAIPlatformOverview();
       case 'platforms':
-        return await getAllPlatforms(startDate);
+        return await getAllPlatforms();
       case 'activity':
-        return await getPlatformActivity(startDate, platform);
+        return await getPlatformActivity();
       case 'detection':
         return await getDetectionMetrics(startDate);
       case 'trends':
-        return await getPlatformTrends(startDate);
+        return await getPlatformTrends();
       case 'engagement':
         return await getEngagementMetrics(startDate);
       case 'comparison':
-        return await getPlatformComparison(startDate);
+        return await getPlatformComparison();
       default:
         return NextResponse.json({ error: 'Invalid AI platform type' }, { status: 400 });
     }
@@ -58,7 +51,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function getAIPlatformOverview(startDate: Date) {
+async function getAIPlatformOverview() {
   try {
     const overview = {
       totalPlatforms: 25,
@@ -117,7 +110,7 @@ async function getAIPlatformOverview(startDate: Date) {
   }
 }
 
-async function getAllPlatforms(startDate: Date) {
+async function getAllPlatforms() {
   try {
     const platforms = [
       {
@@ -269,7 +262,7 @@ async function getAllPlatforms(startDate: Date) {
   }
 }
 
-async function getPlatformActivity(startDate: Date, platform?: string | null) {
+async function getPlatformActivity() {
   try {
     const activityData = Array.from({ length: 24 }, (_, i) => {
       const hour = new Date(Date.now() - (23 - i) * 60 * 60 * 1000);
@@ -323,7 +316,7 @@ async function getDetectionMetrics(startDate: Date) {
   }
 }
 
-async function getPlatformTrends(startDate: Date) {
+async function getPlatformTrends() {
   try {
     const trends = {
       emerging: [
@@ -431,7 +424,7 @@ async function getEngagementMetrics(startDate: Date) {
   }
 }
 
-async function getPlatformComparison(startDate: Date) {
+async function getPlatformComparison() {
   try {
     const comparison = {
       metrics: ['Visits', 'Engagement', 'Detection Accuracy', 'Growth Rate'],

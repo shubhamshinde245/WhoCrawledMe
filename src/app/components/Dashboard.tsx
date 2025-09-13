@@ -118,20 +118,21 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="loading-shimmer w-12 h-12 rounded-full"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
-        <div className="flex">
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">Error</h3>
-            <div className="mt-2 text-sm text-red-700">
-              <p>{error}</p>
-            </div>
+      <div className="modern-card-glass border-red-200/30 bg-red-50/80 backdrop-blur-sm">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+            <span className="text-white text-sm">!</span>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-red-800">Error</h3>
+            <p className="text-sm text-red-700 mt-1">{error}</p>
           </div>
         </div>
       </div>
@@ -141,74 +142,58 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">T</span>
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Total Visits</p>
+                <p className="text-3xl font-bold text-gradient mt-2">{stats.totalVisits}</p>
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Visits</dt>
-                  <dd className="text-lg font-medium text-gray-900">{stats.totalVisits}</dd>
-                </dl>
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-shadow">
+                <span className="text-white font-bold text-lg">📊</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">U</span>
-                </div>
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Unique Bots</p>
+                <p className="text-3xl font-bold text-gradient mt-2">{stats.uniqueBots}</p>
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Unique Bots</dt>
-                  <dd className="text-lg font-medium text-gray-900">{stats.uniqueBots}</dd>
-                </dl>
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/25 transition-shadow">
+                <span className="text-white font-bold text-lg">🤖</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">M</span>
-                </div>
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Most Active</p>
+                <p className="text-xl font-bold text-gradient mt-2 truncate">{stats.topBot}</p>
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Most Active</dt>
-                  <dd className="text-lg font-medium text-gray-900">{stats.topBot}</dd>
-                </dl>
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-shadow">
+                <span className="text-white font-bold text-lg">⭐</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">24h</span>
-                </div>
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Last 24h</p>
+                <p className="text-3xl font-bold text-gradient mt-2">{stats.recentVisits}</p>
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Last 24h</dt>
-                  <dd className="text-lg font-medium text-gray-900">{stats.recentVisits}</dd>
-                </dl>
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-orange-500/25 transition-shadow">
+                <span className="text-white font-bold text-lg">🕐</span>
               </div>
             </div>
           </div>
@@ -216,79 +201,98 @@ export default function Dashboard() {
       </div>
 
       {/* Bot Visits Table */}
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Bot Visits</h3>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">
+      <div className="modern-card-glass animate-fade-in">
+        <div className="px-6 py-6 border-b border-border/50">
+          <h3 className="text-xl font-bold text-gradient">Recent Bot Visits</h3>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
             Latest AI bot detections across monitored websites
           </p>
         </div>
         
         {botVisits.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500">
-              <p className="text-lg font-medium">No bot visits detected yet</p>
-              <p className="mt-2">Start tracking by embedding the tracking script on your website</p>
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-white text-2xl">🔍</span>
+            </div>
+            <div className="text-muted-foreground">
+              <p className="text-lg font-semibold">No bot visits detected yet</p>
+              <p className="mt-2 text-sm">Start tracking by embedding the tracking script on your website</p>
             </div>
           </div>
         ) : (
-          <ul className="divide-y divide-gray-200">
-            {botVisits.map((visit) => (
-              <li key={visit.id}>
-                <div className="px-4 py-4 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getBotTypeColor(visit.bot_type)}`}>
-                        {visit.bot_type}
-                      </span>
-                      <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-900">
-                          {visit.website_url || 'Unknown Website'}
+          <div className="divide-y divide-border/50">
+            {botVisits.map((visit, index) => (
+              <div key={visit.id} className="px-6 py-4 hover:bg-muted/30 transition-colors group animate-slide-in" style={{animationDelay: `${index * 50}ms`}}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${getBotTypeColor(visit.bot_type)} shadow-sm`}>
+                      {visit.bot_type}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {visit.website_url || 'Unknown Website'}
+                      </p>
+                      <div className="flex items-center space-x-4 mt-1">
+                        <p className="text-xs text-muted-foreground">
+                          IP: <span className="font-mono">{visit.ip_address}</span>
                         </p>
-                        <p className="text-sm text-gray-500">
-                          IP: {visit.ip_address} • Confidence: {(visit.bot_confidence * 100).toFixed(0)}%
-                        </p>
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <p className="text-xs text-muted-foreground">
+                            Confidence: {(visit.bot_confidence * 100).toFixed(0)}%
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-900">{formatDate(visit.created_at)}</p>
-                    </div>
                   </div>
-                  <div className="mt-2">
-                    <p className="text-xs text-gray-500 truncate">
-                      User Agent: {visit.user_agent}
-                    </p>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-foreground">{formatDate(visit.created_at)}</p>
                   </div>
                 </div>
-              </li>
+                <div className="mt-3 pl-0">
+                  <p className="text-xs text-muted-foreground font-mono truncate bg-muted/50 px-3 py-1 rounded">
+                    {visit.user_agent}
+                  </p>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
 
       {/* Tracking Instructions */}
-      <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-        <div className="flex">
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">Start Tracking</h3>
-            <div className="mt-2 text-sm text-blue-700">
-              <p>Add this tracking script to your website to start detecting AI bots:</p>
-              <div className="mt-2 bg-white p-3 rounded border">
-                <code className="text-xs text-gray-800">
-                  {`<script>
+      <div className="modern-card-glass border-blue-200/30 bg-gradient-to-br from-blue-50/80 to-indigo-50/80">
+        <div className="flex items-start space-x-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white text-lg">🚀</span>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-blue-800 mb-3">Start Tracking</h3>
+            <p className="text-sm text-blue-700 mb-4">Add this tracking script to your website to start detecting AI bots:</p>
+            
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs font-semibold text-blue-800 mb-2">JavaScript Method:</p>
+                <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-blue-200/50 shadow-sm">
+                  <code className="text-xs text-gray-800 font-mono leading-relaxed">
+                    {`<script>
   fetch('${typeof window !== 'undefined' ? window.location.origin : 'https://your-domain.com'}/api/track', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: window.location.href })
   });
 </script>`}
-                </code>
+                  </code>
+                </div>
               </div>
-              <p className="mt-2">Or use the simple pixel tracking method:</p>
-              <div className="mt-2 bg-white p-3 rounded border">
-                <code className="text-xs text-gray-800">
-                  {`<img src="${typeof window !== 'undefined' ? window.location.origin : 'https://your-domain.com'}/api/track" width="1" height="1" style="display:none;" />`}
-                </code>
+              
+              <div>
+                <p className="text-xs font-semibold text-blue-800 mb-2">Simple Pixel Method:</p>
+                <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-blue-200/50 shadow-sm">
+                  <code className="text-xs text-gray-800 font-mono leading-relaxed">
+                    {`<img src="${typeof window !== 'undefined' ? window.location.origin : 'https://your-domain.com'}/api/track" width="1" height="1" style="display:none;" />`}
+                  </code>
+                </div>
               </div>
             </div>
           </div>

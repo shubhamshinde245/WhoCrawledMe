@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/cards';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { TrendingUp, Eye, Target } from 'lucide-react';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { TrendingUp, Eye } from 'lucide-react';
 
 interface BrandVisibilityChartProps {
   timeRange: string;
@@ -103,7 +103,7 @@ export default function BrandVisibilityChart({ timeRange }: BrandVisibilityChart
           Brand Visibility Metrics
         </CardTitle>
         <CardDescription>
-          Track your brand's visibility across AI platforms over time
+          Track your brands visibility across AI platforms over time
         </CardDescription>
         
         {/* Metric Selector */}

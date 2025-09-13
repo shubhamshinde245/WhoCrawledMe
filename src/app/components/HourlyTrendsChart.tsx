@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,9 +9,11 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+  type ScriptableContext,
+  type TooltipItem,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 ChartJS.register(
   CategoryScale,
@@ -31,31 +33,35 @@ interface HourlyTrendsChartProps {
   timeRange: string;
 }
 
-export default function HourlyTrendsChart({ timeRange }: HourlyTrendsChartProps) {
+export default function HourlyTrendsChart({
+  timeRange,
+}: HourlyTrendsChartProps) {
   const [data, setData] = useState<HourlyData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchHourlyData();
-  }, [timeRange]);
-
-  const fetchHourlyData = async () => {
+  const fetchHourlyData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/analytics?type=hourly-trends&timeRange=${timeRange}`);
+      const response = await fetch(
+        `/api/analytics?type=hourly-trends&timeRange=${timeRange}`
+      );
       const result = await response.json();
       setData(result.data || []);
     } catch (error) {
-      console.error('Failed to fetch hourly data:', error);
+      console.error("Failed to fetch hourly data:", error);
       setData([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    fetchHourlyData();
+  }, [fetchHourlyData]);
 
   // Create 24-hour data array with zeros for missing hours
   const createHourlyData = () => {
-    const hourlyMap = new Map(data.map(item => [item.hour, item.visits]));
+    const hourlyMap = new Map(data.map((item) => [item.hour, item.visits]));
     return Array.from({ length: 24 }, (_, hour) => ({
       hour,
       visits: hourlyMap.get(hour) || 0,
@@ -65,24 +71,24 @@ export default function HourlyTrendsChart({ timeRange }: HourlyTrendsChartProps)
   const hourlyData = createHourlyData();
 
   const chartData = {
-    labels: hourlyData.map(item => {
+    labels: hourlyData.map((item) => {
       const hour = item.hour;
-      if (hour === 0) return '12 AM';
-      if (hour === 12) return '12 PM';
+      if (hour === 0) return "12 AM";
+      if (hour === 12) return "12 PM";
       if (hour < 12) return `${hour} AM`;
       return `${hour - 12} PM`;
     }),
     datasets: [
       {
-        label: 'Bot Visits',
-        data: hourlyData.map(item => item.visits),
-        backgroundColor: (context: any) => {
+        label: "Bot Visits",
+        data: hourlyData.map((item) => item.visits),
+        backgroundColor: (context: ScriptableContext<"bar">) => {
           const value = context.parsed.y;
-          const maxValue = Math.max(...hourlyData.map(d => d.visits));
+          const maxValue = Math.max(...hourlyData.map((d) => d.visits));
           const intensity = maxValue > 0 ? value / maxValue : 0;
           return `rgba(59, 130, 246, ${0.3 + intensity * 0.5})`;
         },
-        borderColor: 'rgb(59, 130, 246)',
+        borderColor: "rgb(59, 130, 246)",
         borderWidth: 1,
         borderRadius: 4,
         borderSkipped: false,
@@ -101,22 +107,23 @@ export default function HourlyTrendsChart({ timeRange }: HourlyTrendsChartProps)
         display: false,
       },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: 'white',
-        bodyColor: 'white',
-        borderColor: 'rgba(59, 130, 246, 0.5)',
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        titleColor: "white",
+        bodyColor: "white",
+        borderColor: "rgba(59, 130, 246, 0.5)",
         borderWidth: 1,
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          title: (context: any) => {
+          title: (context: TooltipItem<"bar">[]) => {
             const hour = hourlyData[context[0].dataIndex]?.hour;
-            if (hour === 0) return '12:00 AM - 12:59 AM';
-            if (hour === 12) return '12:00 PM - 12:59 PM';
+            if (hour === 0) return "12:00 AM - 12:59 AM";
+            if (hour === 12) return "12:00 PM - 12:59 PM";
             if (hour < 12) return `${hour}:00 AM - ${hour}:59 AM`;
             return `${hour - 12}:00 PM - ${hour - 12}:59 PM`;
           },
-          label: (context: any) => `${context.parsed.y} bot visits`,
+          label: (context: TooltipItem<"bar">) =>
+            `${context.parsed.y} bot visits`,
         },
       },
     },
@@ -129,7 +136,7 @@ export default function HourlyTrendsChart({ timeRange }: HourlyTrendsChartProps)
           display: false,
         },
         ticks: {
-          color: 'rgb(107, 114, 128)',
+          color: "rgb(107, 114, 128)",
           font: {
             size: 11,
           },
@@ -140,36 +147,37 @@ export default function HourlyTrendsChart({ timeRange }: HourlyTrendsChartProps)
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(107, 114, 128, 0.1)',
+          color: "rgba(107, 114, 128, 0.1)",
         },
         border: {
           display: false,
         },
         ticks: {
-          color: 'rgb(107, 114, 128)',
+          color: "rgb(107, 114, 128)",
           font: {
             size: 12,
           },
-          callback: function(value: any) {
-            return Number.isInteger(value) ? value : '';
+          callback: function (value: string | number) {
+            return Number.isInteger(value) ? value : "";
           },
         },
       },
     },
     interaction: {
       intersect: false,
-      mode: 'index' as const,
+      mode: "index" as const,
     },
   };
 
   // Calculate peak hours
-  const peakHour = hourlyData.reduce((max, current) => 
-    current.visits > max.visits ? current : max, hourlyData[0]
+  const peakHour = hourlyData.reduce(
+    (max, current) => (current.visits > max.visits ? current : max),
+    hourlyData[0]
   );
 
   const formatHour = (hour: number) => {
-    if (hour === 0) return '12 AM';
-    if (hour === 12) return '12 PM';
+    if (hour === 0) return "12 AM";
+    if (hour === 12) return "12 PM";
     if (hour < 12) return `${hour} AM`;
     return `${hour - 12} PM`;
   };
@@ -215,7 +223,11 @@ export default function HourlyTrendsChart({ timeRange }: HourlyTrendsChartProps)
         <CardTitle className="flex items-center justify-between">
           <span>Hourly Activity Trends</span>
           <span className="text-sm font-normal text-gray-500">
-            {timeRange === '24h' ? 'Last 24 Hours' : timeRange === '7d' ? 'Last 7 Days' : 'Last 30 Days'}
+            {timeRange === "24h"
+              ? "Last 24 Hours"
+              : timeRange === "7d"
+              ? "Last 7 Days"
+              : "Last 30 Days"}
           </span>
         </CardTitle>
       </CardHeader>

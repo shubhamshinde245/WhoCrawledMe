@@ -71,14 +71,14 @@ async function getOverviewData(startDate: Date) {
       .gte('created_at', startDate.toISOString());
 
     // Count bot types manually
-    const botCounts = botVisits?.reduce((acc: any, visit) => {
+    const botCounts = botVisits?.reduce((acc: Record<string, number>, visit) => {
       acc[visit.bot_type] = (acc[visit.bot_type] || 0) + 1;
       return acc;
-    }, {}) || {};
+    }, {} as Record<string, number>) || {};
 
     // Find most active bot
     const mostActiveBot = Object.entries(botCounts)
-      .sort(([,a]: any, [,b]: any) => b - a)[0]?.[0] || 'None';
+      .sort(([,a]: [string, number], [,b]: [string, number]) => b - a)[0]?.[0] || 'None';
 
     // Recent visits (last 24h vs previous 24h)
     const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -124,7 +124,7 @@ async function getVisitsOverTime(startDate: Date, timeRange: string) {
     }
 
     // Group visits by time period
-    const grouped = visits.reduce((acc: any, visit) => {
+    const grouped = visits.reduce((acc: Record<string, number>, visit) => {
       let key: string;
       const date = new Date(visit.created_at);
       
@@ -161,15 +161,15 @@ async function getTopBots(startDate: Date) {
     if (error) throw error;
 
     // Count bot types
-    const botCounts = data?.reduce((acc: any, visit) => {
+    const botCounts = data?.reduce((acc: Record<string, number>, visit) => {
       acc[visit.bot_type] = (acc[visit.bot_type] || 0) + 1;
       return acc;
-    }, {}) || {};
+    }, {} as Record<string, number>) || {};
 
     // Convert to array and sort
     const topBots = Object.entries(botCounts)
       .map(([bot, count]) => ({ bot, count }))
-      .sort((a: any, b: any) => b.count - a.count)
+      .sort((a: { bot: string; count: number }, b: { bot: string; count: number }) => b.count - a.count)
       .slice(0, 10);
 
     return NextResponse.json({ data: topBots });
@@ -189,11 +189,11 @@ async function getHourlyTrends(startDate: Date) {
     if (error) throw error;
 
     // Group by hour
-    const hourlyData = data?.reduce((acc: any, visit) => {
+    const hourlyData = data?.reduce((acc: Record<number, number>, visit) => {
       const hour = new Date(visit.created_at).getHours();
       acc[hour] = (acc[hour] || 0) + 1;
       return acc;
-    }, {}) || {};
+    }, {} as Record<number, number>) || {};
 
     // Create array for all 24 hours
     const hourlyTrends = Array.from({ length: 24 }, (_, hour) => ({

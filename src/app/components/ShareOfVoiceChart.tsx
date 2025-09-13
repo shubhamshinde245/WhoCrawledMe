@@ -69,7 +69,7 @@ export default function ShareOfVoiceChart({ timeRange }: ShareOfVoiceChartProps)
   const yourBrand = shareData.find(item => item.isYourBrand);
   const topCompetitor = shareData.filter(item => !item.isYourBrand).sort((a, b) => b.share - a.share)[0];
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { brand: string; mentions: number; share: number; change: number } }> }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -115,7 +115,7 @@ export default function ShareOfVoiceChart({ timeRange }: ShareOfVoiceChartProps)
           Share of Voice Analysis
         </CardTitle>
         <CardDescription>
-          Your brand's competitive position in AI platform mentions
+          Your brands competitive position in AI platform mentions
         </CardDescription>
         
         {/* View Mode Selector */}
