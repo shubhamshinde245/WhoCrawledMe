@@ -77,7 +77,7 @@ async function getRealTimeOverview(startDate: Date, timeRange: string) {
         ip_address: visit.ip_address,
         user_agent: visit.user_agent,
         status: "success" as const,
-        response_time: Math.floor(Math.random() * 500) + 100, // Mock response time
+        response_time: 200, // Default response time
         confidence: Math.floor(visit.bot_confidence * 100),
       })) || [];
 
@@ -114,36 +114,14 @@ async function getRealTimeOverview(startDate: Date, timeRange: string) {
       });
     }
 
-    // Generate mock geographic activity
-    const geographicActivity = [
-      {
-        country: "United States",
-        region: "North America",
-        visits: Math.floor(Math.random() * 50) + 10,
-        platforms: ["ChatGPT-User", "Claude-Web", "Gemini"],
-        last_activity: new Date(
-          Date.now() - Math.random() * 3600000
-        ).toISOString(),
-      },
-      {
-        country: "United Kingdom",
-        region: "Europe",
-        visits: Math.floor(Math.random() * 30) + 5,
-        platforms: ["ChatGPT-User", "PerplexityBot"],
-        last_activity: new Date(
-          Date.now() - Math.random() * 3600000
-        ).toISOString(),
-      },
-      {
-        country: "Canada",
-        region: "North America",
-        visits: Math.floor(Math.random() * 20) + 3,
-        platforms: ["Claude-Web", "Gemini"],
-        last_activity: new Date(
-          Date.now() - Math.random() * 3600000
-        ).toISOString(),
-      },
-    ].filter((location) => location.visits > 0);
+    // Geographic activity (empty until we have real geographic data)
+    const geographicActivity: Array<{
+      country: string;
+      region: string;
+      visits: number;
+      platforms: string[];
+      last_activity: string;
+    }> = [];
 
     return NextResponse.json({
       liveActivities,
@@ -183,7 +161,7 @@ async function getLiveActivities(startDate: Date) {
         ip_address: visit.ip_address,
         user_agent: visit.user_agent,
         status: "success" as const,
-        response_time: Math.floor(Math.random() * 500) + 100,
+        response_time: 200,
         confidence: Math.floor(visit.bot_confidence * 100),
       })) || [];
 

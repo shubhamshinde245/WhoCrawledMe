@@ -108,24 +108,57 @@ function getClientIP(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  // Set CORS headers for App Mafia integration
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': 'https://app-mafia-v2.vercel.app',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Requested-With',
+    'Access-Control-Max-Age': '86400',
+  };
+
   try {
     const userAgent = request.headers.get('user-agent') || 'Unknown';
     const referer = request.headers.get('referer') || '';
     const ip = getClientIP(request);
-    
-    // Parse the request body for website URL
+    const origin = request.headers.get('origin') || '';
+
+    // Parse the request body for enhanced tracking data
     const body = await request.json().catch(() => ({}));
     const websiteUrl = body.url || referer || 'unknown';
-    
+
+    // Enhanced data from App Mafia tracker
+    const {
+      event_type = 'page_view',
+      session_id,
+      source = 'unknown',
+      title = '',
+      screen_resolution = '',
+      viewport = '',
+      timezone = '',
+      timestamp = new Date().toISOString(),
+      ...additionalData
+    } = body;
+
     // Detect if it's a bot
     const detection = detectBot(userAgent);
-    
+
     // Parse user agent for additional info
     const parser = new UAParser(userAgent);
     const result = parser.getResult();
-    
-    // Only log if it's detected as a bot
-    if (detection.isBot) {
+
+    // Enhanced bot detection for App Mafia
+    const isAppMafiaSource = source === 'app-mafia-v2' || origin.includes('app-mafia');
+    const enhancedDetection = {
+      ...detection,
+      // App Mafia specific bot indicators
+      isContentGeneratorBot: event_type === 'content_generation_start' && detection.isBot,
+      isAIInteraction: ['content_generation_start', 'content_generation_success', 'potential_ai_bot'].includes(event_type),
+    };
+
+    // Always log App Mafia events (not just bots)
+    const shouldLog = detection.isBot || isAppMafiaSource || enhancedDetection.isAIInteraction;
+
+    if (shouldLog) {
       const { error } = await supabase
         .from('bot_visits')
         .insert({
@@ -140,27 +173,61 @@ export async function POST(request: NextRequest) {
             browser: result.browser,
             os: result.os,
             device: result.device,
-            timestamp: new Date().toISOString()
+            timestamp,
+            event_type,
+            session_id,
+            source,
+            title,
+            screen_resolution,
+            viewport,
+            timezone,
+            origin,
+            enhanced_detection: enhancedDetection,
+            ...additionalData
           }
         });
-      
+
       if (error) {
-        console.error('Error inserting bot visit:', error);
-        return NextResponse.json({ error: 'Failed to log visit' }, { status: 500 });
+        console.error('Error inserting visit:', error);
+        return NextResponse.json({ error: 'Failed to log visit' }, {
+          status: 500,
+          headers: corsHeaders
+        });
       }
     }
-    
+
     return NextResponse.json({
       success: true,
       detected: detection.isBot,
       botType: detection.botType,
-      confidence: detection.confidence
+      confidence: detection.confidence,
+      event_type,
+      session_id,
+      enhanced_detection: enhancedDetection
+    }, {
+      headers: corsHeaders
     });
-    
+
   } catch (error) {
     console.error('Error in track API:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error' }, {
+      status: 500,
+      headers: corsHeaders
+    });
   }
+}
+
+export async function OPTIONS() {
+  // Handle CORS preflight requests
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': 'https://app-mafia-v2.vercel.app',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, X-Requested-With',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }
 
 export async function GET(request: NextRequest) {

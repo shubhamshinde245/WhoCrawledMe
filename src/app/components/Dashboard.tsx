@@ -140,62 +140,82 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
-          <div className="p-6">
+    <div className="space-y-6 sm:space-y-8">
+      {/* Enhanced Stats Cards with Better Mobile Design */}
+      <div className="grid-responsive sm:grid-cols-2 xl:grid-cols-4">
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300 card-mobile overflow-hidden">
+          <div className="relative">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Visits</p>
-                <p className="text-3xl font-bold text-gradient mt-2">{stats.totalVisits}</p>
+              <div className="flex-1">
+                <p className="text-responsive-base font-medium text-muted-foreground mb-1">Total Visits</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gradient">{stats.totalVisits}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-muted-foreground">Live tracking</span>
+                </div>
               </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-shadow">
-                <span className="text-white font-bold text-lg">📊</span>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-blue-500/25 transition-all duration-300 group-hover:rotate-3">
+                <span className="text-white font-bold text-lg sm:text-xl">📊</span>
               </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
           </div>
         </div>
 
-        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
-          <div className="p-6">
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300 card-mobile overflow-hidden">
+          <div className="relative">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Unique Bots</p>
-                <p className="text-3xl font-bold text-gradient mt-2">{stats.uniqueBots}</p>
+              <div className="flex-1">
+                <p className="text-responsive-base font-medium text-muted-foreground mb-1">Unique Bots</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gradient">{stats.uniqueBots}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs text-muted-foreground">AI platforms</span>
+                </div>
               </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/25 transition-shadow">
-                <span className="text-white font-bold text-lg">🤖</span>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/25 transition-all duration-300 group-hover:rotate-3">
+                <span className="text-white font-bold text-lg sm:text-xl">🤖</span>
               </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
           </div>
         </div>
 
-        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
-          <div className="p-6">
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300 card-mobile overflow-hidden">
+          <div className="relative">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Most Active</p>
-                <p className="text-xl font-bold text-gradient mt-2 truncate">{stats.topBot}</p>
+              <div className="flex-1">
+                <p className="text-responsive-base font-medium text-muted-foreground mb-1">Most Active</p>
+                <p className="text-lg sm:text-xl font-bold text-gradient truncate">{stats.topBot}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-muted-foreground">Leading bot</span>
+                </div>
               </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-shadow">
-                <span className="text-white font-bold text-lg">⭐</span>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300 group-hover:rotate-3">
+                <span className="text-white font-bold text-lg sm:text-xl">⭐</span>
               </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
           </div>
         </div>
 
-        <div className="modern-card-glass group hover:scale-105 transition-all duration-300">
-          <div className="p-6">
+        <div className="modern-card-glass group hover:scale-105 transition-all duration-300 card-mobile overflow-hidden">
+          <div className="relative">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Last 24h</p>
-                <p className="text-3xl font-bold text-gradient mt-2">{stats.recentVisits}</p>
+              <div className="flex-1">
+                <p className="text-responsive-base font-medium text-muted-foreground mb-1">Last 24h</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gradient">{stats.recentVisits}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs text-muted-foreground">Recent activity</span>
+                </div>
               </div>
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-orange-500/25 transition-shadow">
-                <span className="text-white font-bold text-lg">🕐</span>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-orange-500/25 transition-all duration-300 group-hover:rotate-3">
+                <span className="text-white font-bold text-lg sm:text-xl">🕐</span>
               </div>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
           </div>
         </div>
       </div>
